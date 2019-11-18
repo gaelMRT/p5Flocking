@@ -4,7 +4,7 @@ var boids;
 const NB_BOIDS = 10;
 
 function preload(){
-  img = loadImage('./CFPTI.png');
+  img = loadImage('https://edu.ge.ch/site/cfpt/wp-content/uploads/sites/112/2016/03/loginformatique_dir_couleur.png');
 }
 
 function setup() {
@@ -23,7 +23,7 @@ function draw() {
     var gr = b.group(boids);
   });
   boids.forEach(b => {
-    b.move(boids);
+    b.move(width,height);
     b.draw(img);
   });
 }

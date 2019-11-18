@@ -23,7 +23,9 @@ class Boid{
     }
     draw(img){
         imageMode(CENTER);
-        image(img, this.position.x, this.position.y, this.width, this.height);
+        ellipseMode(CENTER);
+        ellipse( this.position.x, this.position.y, this.width, this.height);
+        //image(img, this.position.x, this.position.y, this.width, this.height);
     }
     move(maxWidth, maxHeight){
         var elapsed = time() - this.lastMoveTime;
