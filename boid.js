@@ -1,16 +1,16 @@
-const SIZE = 30;
-const MIN_SPEED = 30;
+const SIZE = 20;
+const MIN_SPEED = 0;
 const MAX_SPEED = 50;
 
-const ROTATE_STEP = 0.02;
+const MAX_ACCELERATE = 0.1;
 
-const DIST_ALIGN = 150;
-const DIST_REPULSE = 70;
-const DIST_GROUP = 200;
+const DIST_REPULSE = SIZE*1.5;
+const DIST_ALIGN = DIST_REPULSE*2;
+const DIST_GROUP = DIST_ALIGN*2;
 
-const WEIGHT_ALIGN = 3.0;
-const WEIGHT_REPULSE = 5.0;
-const WEIGHT_GROUP = 2.0;
+const WEIGHT_ALIGN = 1.0;
+const WEIGHT_REPULSE = 10.0;
+const WEIGHT_GROUP = 1.0;
 
 class Boid{
     constructor(x,y){
@@ -19,23 +19,37 @@ class Boid{
 
         this.color = color(random(256),random(256),random(256));
 
+        //IndexSizeError : Image drawn out of canvas
+        while(x-SIZE/2 <= 0){
+            x += SIZE/2;
+        }
+        while(x+SIZE/2 >= width){
+            x -= SIZE/2;
+        }
+        while(y-SIZE/2 <= 0){
+            y += SIZE/2;
+        }
+        while(y+SIZE/2 >= height){
+            y -= SIZE/2;
+        }
+
         this.width = SIZE;
         this.height = SIZE;
         this.position = createVector(x, y);     
         this.lastMoveTime = Date.now();   
-        this.speed = createVector(cos(angle)*totalSpeed,sin(angle)*totalSpeed,0);
+        this.speed = createVector(cos(angle) * totalSpeed, sin(angle) * totalSpeed, 0);
     }
     /**
      * Draw the given image to current location
      * @param {Image} img 
      */
-    draw(img){
+    draw(img,drawDist = false){
         imageMode(CENTER);
         push();
         var theta = atan2(this.speed.y,this.speed.x) ;
         translate(this.position.x, this.position.y);
         rotate(theta);
-        
+        fill(this.color);
         beginShape();
         vertex(0, this.height/2);
         vertex(0, -this.height/2);
@@ -44,6 +58,18 @@ class Boid{
 
         rotate(radians(90));
         image(img, 0,0, this.width, this.height);
+
+        if(drawDist){
+            this.color.setAlpha(60);
+            noFill();
+            stroke(this.color);
+            ellipseMode(CENTER);
+            ellipse(0,0,DIST_REPULSE);
+            ellipse(0,0,DIST_ALIGN);
+            ellipse(0,0,DIST_GROUP);
+
+            this.color.setAlpha(255);
+        }
         pop();
     }
     /**
@@ -64,8 +90,9 @@ class Boid{
         accelerate.add(re);
         accelerate.add(gr);
 
-        accelerate.mult(ROTATE_STEP);
-
+        if(accelerate.mag() == 0){
+            accelerate = this.speed;
+        }
         this.speed.add(accelerate);
         if(this.speed.mag() < MIN_SPEED){
             this.speed.normalize();
@@ -80,18 +107,19 @@ class Boid{
     move(){
         var elapsedSec = (Date.now() - this.lastMoveTime)/1000.0;
         this.lastMoveTime = Date.now();
+        
         this.position.x += this.speed.x*elapsedSec;
         this.position.y += this.speed.y*elapsedSec;
         
         if(this.position.x > width + this.width/2){
-            this.position.x -= width;
+            this.position.x -= width + this.width/2;
         }else if(this.position.x < -this.width/2){
-            this.position.x += width;
+            this.position.x += width+ this.width/2;
         }
         if(this.position.y >= height+ this.height/2){
-            this.position.y -= height;
+            this.position.y -= height + this.height/2;
         }else if(this.position.y < -this.height/2){
-            this.position.y += height;
+            this.position.y += height+ this.height/2;
         }
     }
     /**
@@ -104,7 +132,7 @@ class Boid{
         
         otherBoids.forEach(b => {
             var dist = b.distanceFrom(this);
-            if(dist <= DIST_ALIGN && dist > 0){
+            if(dist < DIST_ALIGN && dist > 0){
                 pointToGo.add(b.speed);
                 cpt++;
             }
@@ -119,6 +147,8 @@ class Boid{
     group(otherBoids){
         var pointToGo = createVector(0,0);
         var cpt = 0;
+        var thisToPoint = createVector(0,0);
+
         otherBoids.forEach(b => {
             var dist = b.distanceFrom(this);
             if(dist <= DIST_GROUP && dist > 0){
@@ -126,12 +156,13 @@ class Boid{
                 cpt++;
             }
         });
-        var vectorToPoint = createVector(0,0);
+
+        
         if(cpt > 0){
             pointToGo.div(cpt);
-            vectorToPoint = p5.Vector.sub(pointToGo,this.position);
+            thisToPoint = p5.Vector.sub(pointToGo,this.position);
         }
-        return this.steeringVector(vectorToPoint,1);
+        return this.steeringVector(thisToPoint,1);
     }
     /**
      * Give a vector where to repulse from other
@@ -140,12 +171,17 @@ class Boid{
     repulse(otherBoids){
         var pointToGo = createVector(0,0);
         var cpt = 0;
+
         otherBoids.forEach(b => {
             var dist = b.distanceFrom(this);
 
-            if(dist <= DIST_REPULSE && dist != 0){
+            if(dist < DIST_REPULSE && dist > 0){
                 var diffVector = p5.Vector.sub(this.position,b.position);
                 diffVector.normalize();
+
+                //Less Distance More Power
+                diffVector.div(dist)
+
                 pointToGo.add(diffVector);
                 cpt++;
             }
@@ -164,7 +200,7 @@ class Boid{
             pointToGo.normalize();
             pointToGo.mult(MAX_SPEED);
             pointToGo.sub(this.speed);
-            pointToGo.limit(MAX_SPEED);
+            pointToGo.limit(MAX_ACCELERATE);
         }
         return pointToGo;
 
