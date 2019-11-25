@@ -25,7 +25,9 @@
         boids.push(new Boid(width/3,height-20));
         boids.push(new Boid(width/3*2,20));
         boids[0].speed = createVector(20,0);
+        boids[0].color = color(255,128,128);
         boids[1].speed = createVector(-20,0);
+        boids[1].color = color(128,128,255);
       }
 
       function draw() {

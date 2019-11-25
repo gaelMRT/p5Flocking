@@ -1,5 +1,5 @@
 const SIZE = 20;
-const MIN_SPEED = 0;
+const MIN_SPEED = 10;
 const MAX_SPEED = 50;
 
 const MAX_ACCELERATE = 0.1;
@@ -46,8 +46,114 @@ class Boid{
     draw(img,drawDist = false){
         imageMode(CENTER);
         push();
-        var theta = atan2(this.speed.y,this.speed.x) ;
         translate(this.position.x, this.position.y);
+        //draw zones
+        if(drawDist){
+            this.color.setAlpha(60);
+            noFill();
+            stroke(this.color);
+            ellipseMode(CENTER);
+
+            //Show zones
+            ellipse(0,0,DIST_REPULSE);
+            ellipse(0,0,DIST_ALIGN);
+            ellipse(0,0,DIST_GROUP);
+            //Show borderfluid zone DIST_GROUP
+            var isXLessGROUP = this.position.x - DIST_GROUP < 0;
+            var isXMoreGROUP = this.position.x + DIST_GROUP > width;
+            var isYLessGROUP = this.position.y - DIST_GROUP < 0;
+            var isYMoreGROUP = this.position.y + DIST_GROUP > this.width;
+            if(isXLessGROUP){
+                ellipse(width,0,DIST_GROUP);
+            }
+            if(isXMoreGROUP){
+                ellipse(-width,0,DIST_GROUP);
+            }
+            if(isYLessGROUP){
+                ellipse(0,height,DIST_GROUP);
+            }
+            if(isYMoreGROUP){
+                ellipse(0,-height,DIST_GROUP);
+            }
+            if(isXLessGROUP && isYLessGROUP){
+                ellipse(width,height,DIST_GROUP);
+            }
+            if(isXMoreGROUP && isYLessGROUP){
+                ellipse(-width,height,DIST_GROUP);
+            }
+            if(isXLessGROUP && isYMoreGROUP){
+                ellipse(width,-height,DIST_GROUP);
+            }
+            if(isXMoreGROUP && isYMoreGROUP){
+                ellipse(-width,-height,DIST_GROUP);
+            }
+
+            //Show borderfluid zone DIST_ALIGN
+            var isXLessALIGN = this.position.x - DIST_ALIGN < 0;
+            var isXMoreALIGN = this.position.x + DIST_ALIGN > width;
+            var isYLessALIGN = this.position.y - DIST_ALIGN < 0;
+            var isYMoreALIGN = this.position.y + DIST_ALIGN > this.width;
+            if(isXLessALIGN){
+                ellipse(width,0,DIST_ALIGN);
+            }
+            if(isXMoreALIGN){
+                ellipse(-width,0,DIST_ALIGN);
+            }
+            if(isYLessALIGN){
+                ellipse(0,height,DIST_ALIGN);
+            }
+            if(isYMoreALIGN){
+                ellipse(0,-height,DIST_ALIGN);
+            }
+            if(isXLessALIGN && isYLessALIGN){
+                ellipse(width,height,DIST_ALIGN);
+            }
+            if(isXMoreALIGN && isYLessALIGN){
+                ellipse(-width,height,DIST_ALIGN);
+            }
+            if(isXLessALIGN && isYMoreALIGN){
+                ellipse(width,-height,DIST_ALIGN);
+            }
+            if(isXMoreALIGN && isYMoreALIGN){
+                ellipse(-width,-height,DIST_ALIGN);
+            }
+
+            //Show borderfluid zone DIST_REPULSE
+            var isXLessREPULSE = this.position.x - DIST_REPULSE < 0;
+            var isXMoreREPULSE = this.position.x + DIST_REPULSE > width;
+            var isYLessREPULSE = this.position.y - DIST_REPULSE < 0;
+            var isYMoreREPULSE = this.position.y + DIST_REPULSE > this.width;
+            if(isXLessREPULSE){
+                ellipse(width,0,DIST_REPULSE);
+            }
+            if(isXMoreREPULSE){
+                ellipse(-width,0,DIST_REPULSE);
+            }
+            if(isYLessREPULSE){
+                ellipse(0,height,DIST_REPULSE);
+            }
+            if(isYMoreREPULSE){
+                ellipse(0,-height,DIST_REPULSE);
+            }
+            if(isXLessREPULSE && isYLessREPULSE){
+                ellipse(width,height,DIST_REPULSE);
+            }
+            if(isXMoreREPULSE && isYLessREPULSE){
+                ellipse(-width,height,DIST_REPULSE);
+            }
+            if(isXLessREPULSE && isYMoreREPULSE){
+                ellipse(width,-height,DIST_REPULSE);
+            }
+            if(isXMoreREPULSE && isYMoreREPULSE){
+                ellipse(-width,-height,DIST_REPULSE);
+            }
+
+            this.color.setAlpha(255);
+
+        }// end if(drawDist)
+
+
+        var theta = atan2(this.speed.y,this.speed.x) ;
         rotate(theta);
         fill(this.color);
         beginShape();
@@ -59,17 +165,6 @@ class Boid{
         rotate(radians(90));
         image(img, 0,0, this.width, this.height);
 
-        if(drawDist){
-            this.color.setAlpha(60);
-            noFill();
-            stroke(this.color);
-            ellipseMode(CENTER);
-            ellipse(0,0,DIST_REPULSE);
-            ellipse(0,0,DIST_ALIGN);
-            ellipse(0,0,DIST_GROUP);
-
-            this.color.setAlpha(255);
-        }
         pop();
     }
     /**
@@ -111,15 +206,16 @@ class Boid{
         this.position.x += this.speed.x*elapsedSec;
         this.position.y += this.speed.y*elapsedSec;
         
+        //Recalculate after border passage
         if(this.position.x > width + this.width/2){
-            this.position.x -= width + this.width/2;
+            this.position.x -= width ;
         }else if(this.position.x < -this.width/2){
-            this.position.x += width+ this.width/2;
+            this.position.x += width;
         }
         if(this.position.y >= height+ this.height/2){
-            this.position.y -= height + this.height/2;
+            this.position.y -= height ;
         }else if(this.position.y < -this.height/2){
-            this.position.y += height+ this.height/2;
+            this.position.y += height;
         }
     }
     /**
@@ -132,7 +228,7 @@ class Boid{
         
         otherBoids.forEach(b => {
             var dist = b.distanceFrom(this);
-            if(dist < DIST_ALIGN && dist > 0){
+            if(dist.mag() < DIST_ALIGN && dist.mag() > 0){
                 pointToGo.add(b.speed);
                 cpt++;
             }
@@ -151,8 +247,9 @@ class Boid{
 
         otherBoids.forEach(b => {
             var dist = b.distanceFrom(this);
-            if(dist <= DIST_GROUP && dist > 0){
-                pointToGo.add(b.position);
+            if(dist.mag() <= DIST_GROUP && dist.mag() > 0){
+                
+                pointToGo.add(this.shortestEmplacement(dist));
                 cpt++;
             }
         });
@@ -175,8 +272,8 @@ class Boid{
         otherBoids.forEach(b => {
             var dist = b.distanceFrom(this);
 
-            if(dist < DIST_REPULSE && dist > 0){
-                var diffVector = p5.Vector.sub(this.position,b.position);
+            if(dist.mag() < DIST_REPULSE && dist.mag() > 0){
+                var diffVector = p5.Vector.sub(this.position,this.shortestEmplacement(dist));
                 diffVector.normalize();
 
                 //Less Distance More Power
@@ -206,13 +303,35 @@ class Boid{
 
     }
     /**
-     * Calculate distance from current to other boid
+     * Calculate distance from current to other boid including borderfluid
      * @param {Boid} boid 
      */
     distanceFrom(boid){
         var distX = boid.position.x - this.position.x;
         var distY = boid.position.y - this.position.y;
-        var dist = Math.sqrt(Math.pow(distX,2)+Math.pow(distY,2));
-        return dist;
+
+        if(distX > width/2){
+            distX -= width;
+        }
+        if(distX < -width/2){
+            distX += width;
+        }
+
+        if(distY > height/2){
+            distY -= height;
+        }
+        if(distY < -height/2){
+            distY += height;
+        }
+
+        var vectorDist = createVector(distX, distY);
+        return vectorDist;
+    }
+    /**
+     * Get the distance vector and transform it to a global position vector
+     * @param {p5.Vector} distVector 
+     */
+    shortestEmplacement(distVector){
+        return createVector(this.position.x - distVector.x,this.position.y - distVector.y);
     }
 }
