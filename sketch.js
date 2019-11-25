@@ -9,6 +9,16 @@ function preload(){
   img = loadImage("https://raw.githubusercontent.com/gaelMRT/p5Flocking/master/CFPTI.png");  
 }
 
+// Add a new boid into the System
+function mousePressed() {
+  boids.push(new Boid(mouseX, mouseY));
+}
+// Add a new boid into the System
+function mouseDragged() {
+  boids.push(new Boid(mouseX, mouseY));
+}
+
+
 function setup() {
   createCanvas(windowWidth,windowHeight);
 
@@ -16,7 +26,7 @@ function setup() {
     boids.push(new Boid(random(width),random(height)));
   }
   var btn = createButton("Show/Hide areas");
-  btn.position( 0,65);
+  btn.position( 0,0);
   btn.mousePressed(function(){
     showDraw = !showDraw;
   });
