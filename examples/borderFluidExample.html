@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Access-Control-Allow-Origin: *" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>p5 Flocking</title>
+    <style> body {padding: 0; margin: 0;overflow: hidden;} </style>
+    <script src="../p5.js"></script>
+    <script src="../boid.js"></script>
+    <script>
+      var img;
+      var boids = [];
+
+      const NB_BOIDS = 2;
+
+      function preload(){
+        //Get Image directly from github to avoid "CORS" errors
+        img = loadImage("https://raw.githubusercontent.com/gaelMRT/p5Flocking/master/CFPTI.png");  
+      }
+
+      function setup() {
+        createCanvas(400,400);
+
+        boids.push(new Boid(width/3,height-20));
+        boids.push(new Boid(width/3*2,20));
+        boids[0].speed = createVector(20,0);
+        boids[1].speed = createVector(-20,0);
+      }
+
+      function draw() {
+        background(64);
+        boids.forEach(b => {
+          b.recalculateSpeed(boids);
+        });
+        boids.forEach(b => {
+          b.move(boids);
+          //Second argument : isDrawingDistances
+          b.draw(img,true);
+        });
+      }
+    </script>
+  </head>
+  <body>
+  </body>
+</html>
