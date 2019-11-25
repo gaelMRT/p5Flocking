@@ -1,16 +1,16 @@
 const SIZE = 20;
 const MIN_SPEED = 10;
-const MAX_SPEED = 50;
+const MAX_SPEED = 70;
 
-const MAX_ACCELERATE = 0.1;
+const MAX_ACCELERATE = 0.05;
 
-const DIST_REPULSE = SIZE*1.5;
+const DIST_REPULSE = SIZE*2;
 const DIST_ALIGN = DIST_REPULSE*2;
 const DIST_GROUP = DIST_ALIGN*2;
 
-const WEIGHT_ALIGN = 1.0;
-const WEIGHT_REPULSE = 10.0;
-const WEIGHT_GROUP = 1.0;
+const WEIGHT_ALIGN = 2.0;
+const WEIGHT_REPULSE = 100.0;
+const WEIGHT_GROUP = 2.0;
 
 class Boid{
     constructor(x,y){
@@ -49,6 +49,7 @@ class Boid{
         translate(this.position.x, this.position.y);
         //draw zones
         if(drawDist){
+            push();
             this.color.setAlpha(60);
             noFill();
             stroke(this.color);
@@ -148,6 +149,7 @@ class Boid{
                 ellipse(-width,-height,DIST_REPULSE);
             }
 
+            pop();
             this.color.setAlpha(255);
 
         }// end if(drawDist)

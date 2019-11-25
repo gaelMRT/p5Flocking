@@ -1,5 +1,6 @@
 var img;
 var boids = [];
+var showDraw = false;
 
 const NB_BOIDS = 50;
 
@@ -14,6 +15,11 @@ function setup() {
   for (let i = 0; i < NB_BOIDS; i++) {
     boids.push(new Boid(random(width),random(height)));
   }
+  var btn = createButton("Show/Hide areas");
+  btn.position( 0,65);
+  btn.mousePressed(function(){
+    showDraw = !showDraw;
+  });
 }
 
 function draw() {
@@ -24,6 +30,6 @@ function draw() {
   boids.forEach(b => {
     b.move(boids);
     //Second argument : isDrawingDistances
-    b.draw(img,false);
+    b.draw(img,showDraw);
   });
 }
