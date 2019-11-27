@@ -1,8 +1,11 @@
 var img;
 var boids = [];
 var showDraw = false;
+var canvasWidth = 500;
+var canvasHeight = 500;
 
-const NB_BOIDS = 50;
+const NB_BOIDS = 20;
+
 
 function preload(){
   //Get Image directly from github to avoid "CORS" errors
@@ -20,18 +23,18 @@ function mouseDragged() {
 
 
 function setup() {
-  createCanvas(windowWidth,windowHeight);
-
+  createCanvas(canvasWidth,canvasHeight);
+  
   for (let i = 0; i < NB_BOIDS; i++) {
     boids.push(new Boid(random(width),random(height)));
   }
-  var btn = createButton("Show/Hide areas");
-  btn.position( 0,0);
-  btn.mousePressed(function(){
-    showDraw = !showDraw;
-  });
+  
 }
-
+function keyPressed(){
+  if(keyCode === 82){
+    showDraw = !showDraw;
+  }
+}
 function draw() {
   background(64);
   boids.forEach(b => {
