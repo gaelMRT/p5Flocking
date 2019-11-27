@@ -9,7 +9,7 @@ const NB_BOIDS = 20;
 
 function preload(){
   //Get Image directly from github to avoid "CORS" errors
-  img = loadImage("https://raw.githubusercontent.com/gaelMRT/p5Flocking/master/CFPTI.png");  
+  img = loadImage("https://raw.githubusercontent.com/gaelMRT/p5Flocking/master/assets/CFPTI.png");  
 }
 
 // Add a new boid into the System
