@@ -8,6 +8,10 @@ const DIST_REPULSE = SIZE*2;
 const DIST_ALIGN = DIST_REPULSE*2;
 const DIST_GROUP = DIST_ALIGN*2;
 
+const DIAMETER_REPULSE = DIST_REPULSE*2;
+const DIAMETER_ALIGN = DIST_ALIGN*2;
+const DIAMETER_GROUP = DIST_GROUP*2;
+
 const WEIGHT_ALIGN = 2.0;
 const WEIGHT_REPULSE = 100.0;
 const WEIGHT_GROUP = 2.0;
@@ -56,37 +60,37 @@ class Boid{
             ellipseMode(CENTER);
 
             //Show zones
-            ellipse(0,0,DIST_REPULSE);
-            ellipse(0,0,DIST_ALIGN);
-            ellipse(0,0,DIST_GROUP);
+            ellipse(0,0,DIAMETER_REPULSE);
+            ellipse(0,0,DIAMETER_ALIGN);
+            ellipse(0,0,DIAMETER_GROUP);
             //Show borderfluid zone DIST_GROUP
             var isXLessGROUP = this.position.x - DIST_GROUP < 0;
             var isXMoreGROUP = this.position.x + DIST_GROUP > width;
             var isYLessGROUP = this.position.y - DIST_GROUP < 0;
             var isYMoreGROUP = this.position.y + DIST_GROUP > this.width;
             if(isXLessGROUP){
-                ellipse(width,0,DIST_GROUP);
+                ellipse(width,0,DIAMETER_GROUP);
             }
             if(isXMoreGROUP){
-                ellipse(-width,0,DIST_GROUP);
+                ellipse(-width,0,DIAMETER_GROUP);
             }
             if(isYLessGROUP){
-                ellipse(0,height,DIST_GROUP);
+                ellipse(0,height,DIAMETER_GROUP);
             }
             if(isYMoreGROUP){
-                ellipse(0,-height,DIST_GROUP);
+                ellipse(0,-height,DIAMETER_GROUP);
             }
             if(isXLessGROUP && isYLessGROUP){
-                ellipse(width,height,DIST_GROUP);
+                ellipse(width,height,DIAMETER_GROUP);
             }
             if(isXMoreGROUP && isYLessGROUP){
-                ellipse(-width,height,DIST_GROUP);
+                ellipse(-width,height,DIAMETER_GROUP);
             }
             if(isXLessGROUP && isYMoreGROUP){
-                ellipse(width,-height,DIST_GROUP);
+                ellipse(width,-height,DIAMETER_GROUP);
             }
             if(isXMoreGROUP && isYMoreGROUP){
-                ellipse(-width,-height,DIST_GROUP);
+                ellipse(-width,-height,DIAMETER_GROUP);
             }
 
             //Show borderfluid zone DIST_ALIGN
@@ -95,28 +99,28 @@ class Boid{
             var isYLessALIGN = this.position.y - DIST_ALIGN < 0;
             var isYMoreALIGN = this.position.y + DIST_ALIGN > this.width;
             if(isXLessALIGN){
-                ellipse(width,0,DIST_ALIGN);
+                ellipse(width,0,DIAMETER_ALIGN);
             }
             if(isXMoreALIGN){
-                ellipse(-width,0,DIST_ALIGN);
+                ellipse(-width,0,DIAMETER_ALIGN);
             }
             if(isYLessALIGN){
-                ellipse(0,height,DIST_ALIGN);
+                ellipse(0,height,DIAMETER_ALIGN);
             }
             if(isYMoreALIGN){
-                ellipse(0,-height,DIST_ALIGN);
+                ellipse(0,-height,DIAMETER_ALIGN);
             }
             if(isXLessALIGN && isYLessALIGN){
-                ellipse(width,height,DIST_ALIGN);
+                ellipse(width,height,DIAMETER_ALIGN);
             }
             if(isXMoreALIGN && isYLessALIGN){
-                ellipse(-width,height,DIST_ALIGN);
+                ellipse(-width,height,DIAMETER_ALIGN);
             }
             if(isXLessALIGN && isYMoreALIGN){
-                ellipse(width,-height,DIST_ALIGN);
+                ellipse(width,-height,DIAMETER_ALIGN);
             }
             if(isXMoreALIGN && isYMoreALIGN){
-                ellipse(-width,-height,DIST_ALIGN);
+                ellipse(-width,-height,DIAMETER_ALIGN);
             }
 
             //Show borderfluid zone DIST_REPULSE
@@ -125,28 +129,28 @@ class Boid{
             var isYLessREPULSE = this.position.y - DIST_REPULSE < 0;
             var isYMoreREPULSE = this.position.y + DIST_REPULSE > this.width;
             if(isXLessREPULSE){
-                ellipse(width,0,DIST_REPULSE);
+                ellipse(width,0,DIAMETER_REPULSE);
             }
             if(isXMoreREPULSE){
-                ellipse(-width,0,DIST_REPULSE);
+                ellipse(-width,0,DIAMETER_REPULSE);
             }
             if(isYLessREPULSE){
-                ellipse(0,height,DIST_REPULSE);
+                ellipse(0,height,DIAMETER_REPULSE);
             }
             if(isYMoreREPULSE){
-                ellipse(0,-height,DIST_REPULSE);
+                ellipse(0,-height,DIAMETER_REPULSE);
             }
             if(isXLessREPULSE && isYLessREPULSE){
-                ellipse(width,height,DIST_REPULSE);
+                ellipse(width,height,DIAMETER_REPULSE);
             }
             if(isXMoreREPULSE && isYLessREPULSE){
-                ellipse(-width,height,DIST_REPULSE);
+                ellipse(-width,height,DIAMETER_REPULSE);
             }
             if(isXLessREPULSE && isYMoreREPULSE){
-                ellipse(width,-height,DIST_REPULSE);
+                ellipse(width,-height,DIAMETER_REPULSE);
             }
             if(isXMoreREPULSE && isYMoreREPULSE){
-                ellipse(-width,-height,DIST_REPULSE);
+                ellipse(-width,-height,DIAMETER_REPULSE);
             }
 
             pop();
